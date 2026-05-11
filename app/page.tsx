@@ -73,12 +73,17 @@ export default function Home() {
   const secaoReceita = filtered.filter(([, d]) => d.secao === 'receita').sort((a, b) => b[1].bookedTotal - a[1].bookedTotal)
   const secaoLeads   = filtered.filter(([, d]) => d.secao === 'leads').sort((a, b) => b[1].vendas - a[1].vendas)
 
-  const allFiltered  = filtered.map(([, d]) => d)
-  const totalVendas  = allFiltered.reduce((s, c) => s + c.vendas, 0)
-  const totalBooked  = allFiltered.reduce((s, c) => s + c.bookedTotal, 0)
-  const vendasComVal = allFiltered.filter(c => c.bookedTotal > 0).reduce((s, c) => s + c.vendas, 0)
-  const ticketGeral  = vendasComVal > 0 ? totalBooked / vendasComVal : 0
-  const cursosAtivos = allFiltered.filter(c => c.status === 'Em execução').length
+
+  const receitaList  = filtered.filter(([, d]) => d.secao === 'receita').map(([, d]) => d)
+  const leadsList    = filtered.filter(([, d]) => d.secao === 'leads').map(([, d]) => d)
+
+  const vendasReceita  = receitaList.reduce((s, c) => s + c.vendas, 0)
+  const bookedReceita  = receitaList.reduce((s, c) => s + c.bookedTotal, 0)
+  const vendasComValR  = receitaList.filter(c => c.bookedTotal > 0).reduce((s, c) => s + c.vendas, 0)
+  const ticketReceita  = vendasComValR > 0 ? bookedReceita / vendasComValR : 0
+
+  const totalLeads     = leadsList.reduce((s, c) => s + c.vendas, 0)
+  const cursosLeads    = leadsList.length
 
   const top3Booked = [...secaoReceita].slice(0, 3)
   const top3Vendas = [...filtered].sort((a, b) => b[1].vendas - a[1].vendas).slice(0, 3)
@@ -97,11 +102,14 @@ export default function Home() {
     value: d.vendas,
   }))
 
-  const kpiCards = [
-    { label: 'Total de Vendas',    value: totalVendas.toLocaleString('pt-BR'), sub: 'deals faturados',       color: '#00205B', bg: '#e8edf5' },
-    { label: 'Booked Sales',       value: fmtK(totalBooked),                  sub: 'receita registrada',    color: '#0C447C', bg: '#e3ecf7' },
-    { label: 'Ticket Médio',       value: `R$ ${fmt(ticketGeral)}`,           sub: 'por venda com receita', color: '#2e7d32', bg: '#e8f5e9' },
-    { label: 'Cursos Ativos',      value: cursosAtivos.toString(),            sub: 'em execução',           color: '#e65100', bg: '#fff3e0' },
+  const kpiReceita = [
+    { label: 'Nº de Vendas',  value: vendasReceita.toLocaleString('pt-BR'), sub: 'deals faturados',       color: '#00205B' },
+    { label: 'Booked Sales',  value: fmtK(bookedReceita),                   sub: 'receita registrada',    color: '#0C447C' },
+    { label: 'Ticket Médio',  value: `R$ ${fmt(ticketReceita)}`,            sub: 'por venda com receita', color: '#2e7d32' },
+  ]
+  const kpiLeads = [
+    { label: 'Total de Leads', value: totalLeads.toLocaleString('pt-BR'), sub: 'leads captados',     color: '#e65100' },
+    { label: 'Cursos Ativos',  value: cursosLeads.toString(),             sub: 'com foco em leads',  color: '#7b1fa2' },
   ]
 
   return (
@@ -128,15 +136,43 @@ export default function Home() {
 
       <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '1.5rem 2rem' }}>
 
-        {/* KPI Cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', marginBottom: '1.5rem' }}>
-          {kpiCards.map(card => (
-            <div key={card.label} style={{ backgroundColor: '#fff', borderRadius: '12px', padding: '1.25rem 1.5rem', boxShadow: '0 1px 6px rgba(0,0,0,0.07)', borderTop: `4px solid ${card.color}`, display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
-              <div style={{ fontSize: '11px', color: '#999', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600 }}>{card.label}</div>
-              <div style={{ fontSize: '28px', fontWeight: 800, color: card.color, lineHeight: 1.1 }}>{card.value}</div>
-              <div style={{ fontSize: '11px', color: '#aaa' }}>{card.sub}</div>
+        {/* KPI Cards — dois grupos */}
+        <div style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gap: '1.25rem', marginBottom: '1.5rem' }}>
+
+          {/* Grupo Foco em Receita */}
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.6rem' }}>
+              <span style={{ fontSize: '11px', fontWeight: 700, color: '#00205B', textTransform: 'uppercase', letterSpacing: '0.08em' }}>💰 Foco em Receita</span>
+              <div style={{ flex: 1, height: '1px', backgroundColor: '#d0d8e8' }} />
             </div>
-          ))}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem' }}>
+              {kpiReceita.map(card => (
+                <div key={card.label} style={{ backgroundColor: '#fff', borderRadius: '12px', padding: '1.1rem 1.25rem', boxShadow: '0 1px 6px rgba(0,0,0,0.07)', borderTop: `4px solid ${card.color}`, display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                  <div style={{ fontSize: '10px', color: '#999', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600 }}>{card.label}</div>
+                  <div style={{ fontSize: '26px', fontWeight: 800, color: card.color, lineHeight: 1.1 }}>{card.value}</div>
+                  <div style={{ fontSize: '10px', color: '#aaa' }}>{card.sub}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Grupo Foco em Leads */}
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.6rem' }}>
+              <span style={{ fontSize: '11px', fontWeight: 700, color: '#e65100', textTransform: 'uppercase', letterSpacing: '0.08em' }}>🎯 Foco em Leads</span>
+              <div style={{ flex: 1, height: '1px', backgroundColor: '#ffe0cc' }} />
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem' }}>
+              {kpiLeads.map(card => (
+                <div key={card.label} style={{ backgroundColor: '#fff', borderRadius: '12px', padding: '1.1rem 1.25rem', boxShadow: '0 1px 6px rgba(0,0,0,0.07)', borderTop: `4px solid ${card.color}`, display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                  <div style={{ fontSize: '10px', color: '#999', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600 }}>{card.label}</div>
+                  <div style={{ fontSize: '26px', fontWeight: 800, color: card.color, lineHeight: 1.1 }}>{card.value}</div>
+                  <div style={{ fontSize: '10px', color: '#aaa' }}>{card.sub}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
         </div>
 
         {/* Charts row */}
