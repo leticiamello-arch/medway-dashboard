@@ -7,6 +7,7 @@ type Curso = {
   bookedTotal: number
   ticket: number
   status: string
+  abertura: string
   encCarrinho: string
   alerta?: boolean
 }
@@ -25,11 +26,15 @@ const STATUS_TEXT: Record<string, string> = {
 
 const MESES_PT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
 
-function parseEncMes(enc: string): string | null {
-  if (!enc || enc === 'N/D') return null
-  const parts = enc.split('/')
-  if (parts.length !== 3) return null
-  return `${parts[1]}/${parts[2]}`
+function toMonthVal(ddmmyyyy: string): number | null {
+  if (!ddmmyyyy || ddmmyyyy === 'N/D') return null
+  const p = ddmmyyyy.split('/')
+  if (p.length !== 3) return null
+  return parseInt(p[2]) * 12 + parseInt(p[1])
+}
+
+function mmyyyyKey(m: number, y: number): string {
+  return `${String(m).padStart(2, '0')}/${y}`
 }
 
 function fmtMesLabel(mmyyyy: string): string {
@@ -43,34 +48,38 @@ export default function Home() {
   const [mesFiltro, setMesFiltro] = useState('Todos')
 
   const cursos: Record<string, Curso> = {
-    "Intensivo TPI 2026":              { vendas: 11,   bookedTotal: 16490.16,    ticket: 1499.11,  status: 'Finalizado',     encCarrinho: '08/02/2026' },
-    "Intensivo TED 2026":              { vendas: 16,   bookedTotal: 28680.09,    ticket: 1792.51,  status: 'Em execução',    encCarrinho: '19/04/2026' },
-    "Extensivo TED/TPI (1 e 2 anos)":  { vendas: 70,   bookedTotal: 323051.44,   ticket: 4615.02,  status: 'Em execução',    encCarrinho: '29/01/2027' },
-    "Extensivo TED/TPI (3 anos)":      { vendas: 15,   bookedTotal: 122499.76,   ticket: 8166.65,  status: 'Em execução',    encCarrinho: '09/03/2027' },
-    "CR Revalida Presencial 25.2":     { vendas: 54,   bookedTotal: 29836.00,    ticket: 542.47,   status: 'Finalizado',     encCarrinho: '07/05/2026' },
-    "CR Revalida Online 25.2":         { vendas: 418,  bookedTotal: 0,           ticket: 0,        status: 'Em execução',    encCarrinho: '18/05/2026', alerta: true },
-    "Intensivo Revalida 26.1":         { vendas: 1096, bookedTotal: 0,           ticket: 0,        status: 'Em execução',    encCarrinho: '07/06/2026', alerta: true },
-    "Intensivo Revalida 26.2":         { vendas: 2,    bookedTotal: 4542.27,     ticket: 2271.14,  status: 'Não iniciada',   encCarrinho: '26/08/2026' },
-    "Extensivo Revalida 27.1":         { vendas: 8,    bookedTotal: 0,           ticket: 0,        status: 'Não iniciada',   encCarrinho: '23/03/2027', alerta: true },
-    "Extensivo R+ CM 2026":            { vendas: 1009, bookedTotal: 8831287.05,  ticket: 8752.51,  status: 'Em execução',    encCarrinho: '03/08/2026' },
-    "Extensivo R+ PED 2026":           { vendas: 261,  bookedTotal: 2076133.64,  ticket: 7954.54,  status: 'Em execução',    encCarrinho: '03/08/2026' },
-    "Extensivo R+ GO 2026":            { vendas: 233,  bookedTotal: 1727381.90,  ticket: 7413.66,  status: 'Em execução',    encCarrinho: '03/08/2026' },
-    "Extensivo R+ CIR 2026":           { vendas: 193,  bookedTotal: 1223281.32,  ticket: 6338.25,  status: 'Em execução',    encCarrinho: '03/08/2026' },
-    "Extensivo R+ CM - 2027":          { vendas: 0,    bookedTotal: 0,           ticket: 0,        status: 'Não iniciada',   encCarrinho: '31/03/2027' },
-    "Extensivo R+ GO - 2027":          { vendas: 0,    bookedTotal: 0,           ticket: 0,        status: 'Não iniciada',   encCarrinho: '31/03/2027' },
-    "Extensivo R+ PED - 2027":         { vendas: 0,    bookedTotal: 0,           ticket: 0,        status: 'Não iniciada',   encCarrinho: '31/03/2027' },
-    "Extensivo R+ CIR - 2027":         { vendas: 0,    bookedTotal: 0,           ticket: 0,        status: 'Não iniciada',   encCarrinho: '31/03/2027' },
-    "Extensivo R+ Endoscopia":         { vendas: 0,    bookedTotal: 0,           ticket: 0,        status: 'Não iniciada',   encCarrinho: '01/03/2027' },
-    "Extensivo R+ Mastologia":         { vendas: 0,    bookedTotal: 0,           ticket: 0,        status: 'Não iniciada',   encCarrinho: '01/03/2027' },
+    "Intensivo TPI 2026":             { vendas: 11,   bookedTotal: 16490.16,   ticket: 1499.11, status: 'Finalizado',   abertura: '17/11/2025', encCarrinho: '08/02/2026' },
+    "Intensivo TED 2026":             { vendas: 16,   bookedTotal: 28680.09,   ticket: 1792.51, status: 'Em execução',  abertura: '17/11/2025', encCarrinho: '19/04/2026' },
+    "Extensivo TED/TPI (1 e 2 anos)": { vendas: 70,   bookedTotal: 323051.44,  ticket: 4615.02, status: 'Em execução',  abertura: '29/01/2026', encCarrinho: '29/01/2027' },
+    "Extensivo TED/TPI (3 anos)":     { vendas: 15,   bookedTotal: 122499.76,  ticket: 8166.65, status: 'Em execução',  abertura: '09/03/2026', encCarrinho: '09/03/2027' },
+    "CR Revalida Presencial 25.2":    { vendas: 54,   bookedTotal: 29836.00,   ticket: 542.47,  status: 'Finalizado',   abertura: '23/03/2026', encCarrinho: '07/05/2026' },
+    "CR Revalida Online 25.2":        { vendas: 418,  bookedTotal: 0,          ticket: 0,       status: 'Em execução',  abertura: '23/03/2026', encCarrinho: '18/05/2026', alerta: true },
+    "Intensivo Revalida 26.1":        { vendas: 1096, bookedTotal: 0,          ticket: 0,       status: 'Em execução',  abertura: '23/03/2026', encCarrinho: '07/06/2026', alerta: true },
+    "Intensivo Revalida 26.2":        { vendas: 2,    bookedTotal: 4542.27,    ticket: 2271.14, status: 'Não iniciada', abertura: '23/03/2026', encCarrinho: '26/08/2026' },
+    "Extensivo Revalida 27.1":        { vendas: 8,    bookedTotal: 0,          ticket: 0,       status: 'Não iniciada', abertura: '23/03/2026', encCarrinho: '23/03/2027', alerta: true },
+    "Extensivo R+ CM 2026":           { vendas: 1009, bookedTotal: 8831287.05, ticket: 8752.51, status: 'Em execução',  abertura: '01/10/2025', encCarrinho: '03/08/2026' },
+    "Extensivo R+ PED 2026":          { vendas: 261,  bookedTotal: 2076133.64, ticket: 7954.54, status: 'Em execução',  abertura: '01/10/2025', encCarrinho: '03/08/2026' },
+    "Extensivo R+ GO 2026":           { vendas: 233,  bookedTotal: 1727381.90, ticket: 7413.66, status: 'Em execução',  abertura: '01/10/2025', encCarrinho: '03/08/2026' },
+    "Extensivo R+ CIR 2026":          { vendas: 193,  bookedTotal: 1223281.32, ticket: 6338.25, status: 'Em execução',  abertura: '01/10/2025', encCarrinho: '03/08/2026' },
   }
 
+  // Build month list: all months where at least one course is open for sales
+  const allMonthsSet = new Set<string>()
+  Object.values(cursos).forEach(c => {
+    const ab = toMonthVal(c.abertura)
+    const enc = toMonthVal(c.encCarrinho)
+    if (ab === null || enc === null) return
+    let val = ab
+    while (val <= enc) {
+      const y = Math.floor((val - 1) / 12)
+      const m = val - y * 12
+      allMonthsSet.add(mmyyyyKey(m, y))
+      val++
+    }
+  })
   const mesesDisponiveis = [
     'Todos',
-    ...Array.from(new Set(
-      Object.values(cursos)
-        .map(c => parseEncMes(c.encCarrinho))
-        .filter((m): m is string => m !== null)
-    )).sort((a, b) => {
+    ...Array.from(allMonthsSet).sort((a, b) => {
       const [am, ay] = a.split('/').map(Number)
       const [bm, by] = b.split('/').map(Number)
       return ay !== by ? ay - by : am - bm
@@ -83,18 +92,33 @@ export default function Home() {
     .filter(([nome, dados]) => {
       const matchSearch = nome.toLowerCase().includes(search.toLowerCase())
       const matchStatus = statusFiltro === 'Todos' || dados.status === statusFiltro
-      const matchMes = mesFiltro === 'Todos' || parseEncMes(dados.encCarrinho) === mesFiltro
+      let matchMes = true
+      if (mesFiltro !== 'Todos') {
+        const [selM, selY] = mesFiltro.split('/').map(Number)
+        const selVal = selY * 12 + selM
+        const ab = toMonthVal(dados.abertura)
+        const enc = toMonthVal(dados.encCarrinho)
+        matchMes = ab !== null && enc !== null && selVal >= ab && selVal <= enc
+      }
       return matchSearch && matchStatus && matchMes
     })
     .sort((a, b) => b[1].bookedTotal - a[1].bookedTotal)
 
-  const filteredCursos = filtered.map(([, dados]) => dados)
+  const filteredCursos = filtered.map(([, d]) => d)
   const totalVendas  = filteredCursos.reduce((s, c) => s + c.vendas, 0)
   const totalBooked  = filteredCursos.reduce((s, c) => s + c.bookedTotal, 0)
   const vendasComVal = filteredCursos.filter(c => c.bookedTotal > 0).reduce((s, c) => s + c.vendas, 0)
   const ticketGeral  = vendasComVal > 0 ? totalBooked / vendasComVal : 0
 
+  const top3Booked = [...filtered].sort((a, b) => b[1].bookedTotal - a[1].bookedTotal).slice(0, 3)
+  const top3Vendas = [...filtered].sort((a, b) => b[1].vendas - a[1].vendas).slice(0, 3)
+
   const fmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+  const fmtK = (v: number) => v >= 1_000_000
+    ? `R$ ${(v / 1_000_000).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}M`
+    : `R$ ${(v / 1_000).toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}K`
+
+  const MEDALS = ['🥇', '🥈', '🥉']
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#f5f5f5', fontFamily: 'Inter, sans-serif' }}>
@@ -105,8 +129,8 @@ export default function Home() {
 
       <div style={{ maxWidth: '1300px', margin: '2rem auto', padding: '0 1.5rem' }}>
 
-        {/* Cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
+        {/* KPI Cards */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
           {[
             { label: 'Total de Vendas',    value: totalVendas.toLocaleString('pt-BR'), color: '#00205B' },
             { label: 'Booked Sales Total', value: `R$ ${fmt(totalBooked)}`,            color: '#0C447C' },
@@ -118,6 +142,41 @@ export default function Home() {
               <div style={{ fontSize: '26px', fontWeight: 700, color: card.color, marginTop: '0.3rem' }}>{card.value}</div>
             </div>
           ))}
+        </div>
+
+        {/* Top 3 Rankings */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
+          {/* Top 3 Booked Sales */}
+          <div style={{ backgroundColor: '#fff', borderRadius: '10px', padding: '1.25rem 1.5rem', boxShadow: '0 1px 4px rgba(0,0,0,0.07)' }}>
+            <div style={{ fontSize: '11px', color: '#888', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>Top 3 — Booked Sales</div>
+            {top3Booked.map(([nome, dados], i) => (
+              <div key={nome} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: i < 2 ? '1px solid #f0f0f0' : 'none' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <span style={{ fontSize: '18px' }}>{MEDALS[i]}</span>
+                  <span style={{ fontSize: '13px', fontWeight: 500, color: '#333' }}>{nome}</span>
+                </div>
+                <span style={{ fontSize: '15px', fontWeight: 700, color: '#0C447C', whiteSpace: 'nowrap' }}>
+                  {dados.bookedTotal > 0 ? fmtK(dados.bookedTotal) : '—'}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* Top 3 Nº Vendas */}
+          <div style={{ backgroundColor: '#fff', borderRadius: '10px', padding: '1.25rem 1.5rem', boxShadow: '0 1px 4px rgba(0,0,0,0.07)' }}>
+            <div style={{ fontSize: '11px', color: '#888', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>Top 3 — Nº de Vendas</div>
+            {top3Vendas.map(([nome, dados], i) => (
+              <div key={nome} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: i < 2 ? '1px solid #f0f0f0' : 'none' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <span style={{ fontSize: '18px' }}>{MEDALS[i]}</span>
+                  <span style={{ fontSize: '13px', fontWeight: 500, color: '#333' }}>{nome}</span>
+                </div>
+                <span style={{ fontSize: '15px', fontWeight: 700, color: '#00205B' }}>
+                  {dados.vendas > 0 ? dados.vendas.toLocaleString('pt-BR') : '—'}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Alerta */}
