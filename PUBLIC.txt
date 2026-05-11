@@ -1,0 +1,38 @@
+🚀 DEPLOY NO VERCEL - PASSO A PASSO
+
+1. CRIAR REPOSITÓRIO GITHUB
+   - Acesse: https://github.com/new
+   - Nome: medway-dashboard
+   - Descrição: Dashboard de vendas Medway com HubSpot
+   - Clique em "Create repository"
+
+2. FAZER PUSH DO CÓDIGO
+   No terminal (dentro da pasta medway-dashboard):
+   
+   git config --global user.email "seu-email@gmail.com"
+   git config --global user.name "Seu Nome"
+   git init
+   git add .
+   git commit -m "Initial commit"
+   git branch -M main
+   git remote add origin https://github.com/SEU-USUARIO/medway-dashboard.git
+   git push -u origin main
+
+3. DEPLOY NO VERCEL
+   - Acesse: https://vercel.com
+   - Clique em "New Project"
+   - Selecione seu repositório "medway-dashboard"
+   - Framework: Next.js (deve ser detectado automaticamente)
+   - Clique em "Deploy"
+   - Aguarde 2-3 minutos
+
+4. PRONTO! 🎉
+   Seu dashboard estará em:
+   https://medway-dashboard.vercel.app
+
+5. ATUALIZAR (após fazer push no GitHub)
+   Vercel automaticamente faz deploy quando você faz push na main branch
+
+DÚVIDAS?
+- Docs Vercel: https://vercel.com/docs
+- Docs Next.js: https://nextjs.org/docs
