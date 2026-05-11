@@ -168,7 +168,7 @@ export default function Home() {
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#f5f5f5', fontFamily: 'Inter, sans-serif' }}>
       <header style={{ backgroundColor: '#00205B', color: '#fff', padding: '1.5rem 2rem' }}>
-        <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 700 }}>Medway — Dashboard de Cursos</h1>
+        <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 700 }}>Medway Mais - Dashboard</h1>
         <p style={{ margin: '0.4rem 0 0', fontSize: '13px', opacity: 0.8 }}>Dados HubSpot • Roadmap GTM 26/27 • 11/05/2026</p>
       </header>
 
