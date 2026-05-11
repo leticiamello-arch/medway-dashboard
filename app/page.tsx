@@ -32,15 +32,15 @@ export default function Home() {
   const [statusFiltro, setStatusFiltro] = useState('Todos')
 
   const cursos: Record<string, Curso> = {
-    "Intensivo TPI 2026":              { vendas: 11,   bookedTotal: 16490.16,  ticket: 1499.11,  status: 'Finalizado',     encCarrinho: 'N/D' },
-    "Intensivo TED 2026":              { vendas: 16,   bookedTotal: 28680.09,  ticket: 1792.51,  status: 'Acompanhamento', encCarrinho: 'N/D' },
-    "Extensivo TED/TPI (1 e 2 anos)":  { vendas: 70,   bookedTotal: 323051.44, ticket: 4615.02,  status: 'Acompanhamento', encCarrinho: 'N/D' },
-    "Extensivo TED/TPI (3 anos)":      { vendas: 15,   bookedTotal: 122499.76, ticket: 8166.65,  status: 'Acompanhamento', encCarrinho: 'N/D' },
-    "CR Revalida Presencial 25.2":     { vendas: 54,   bookedTotal: 29836.00,  ticket: 542.47,   status: 'Expansão',       encCarrinho: 'N/D' },
-    "CR Revalida Online 25.2":         { vendas: 418,  bookedTotal: 0,         ticket: 0,        status: 'Em execução',    encCarrinho: 'N/D', alerta: true },
-    "Intensivo Revalida 26.1":         { vendas: 1096, bookedTotal: 0,         ticket: 0,        status: 'Em execução',    encCarrinho: 'N/D', alerta: true },
-    "Intensivo Revalida 26.2":         { vendas: 2,    bookedTotal: 4542.27,   ticket: 2271.14,  status: 'Não iniciada',   encCarrinho: 'N/D' },
-    "Extensivo Revalida 27.1":         { vendas: 8,    bookedTotal: 0,         ticket: 0,        status: 'Não iniciada',   encCarrinho: 'N/D', alerta: true },
+    "Intensivo TPI 2026":              { vendas: 11,   bookedTotal: 16490.16,  ticket: 1499.11,  status: 'Finalizado',     encCarrinho: '08/02/2026' },
+    "Intensivo TED 2026":              { vendas: 16,   bookedTotal: 28680.09,  ticket: 1792.51,  status: 'Acompanhamento', encCarrinho: '19/04/2026' },
+    "Extensivo TED/TPI (1 e 2 anos)":  { vendas: 70,   bookedTotal: 323051.44, ticket: 4615.02,  status: 'Acompanhamento', encCarrinho: '29/01/2027' },
+    "Extensivo TED/TPI (3 anos)":      { vendas: 15,   bookedTotal: 122499.76, ticket: 8166.65,  status: 'Acompanhamento', encCarrinho: '09/03/2027' },
+    "CR Revalida Presencial 25.2":     { vendas: 54,   bookedTotal: 29836.00,  ticket: 542.47,   status: 'Expansão',       encCarrinho: '07/05/2026' },
+    "CR Revalida Online 25.2":         { vendas: 418,  bookedTotal: 0,         ticket: 0,        status: 'Em execução',    encCarrinho: '18/05/2026', alerta: true },
+    "Intensivo Revalida 26.1":         { vendas: 1096, bookedTotal: 0,         ticket: 0,        status: 'Em execução',    encCarrinho: '07/06/2026', alerta: true },
+    "Intensivo Revalida 26.2":         { vendas: 2,    bookedTotal: 4542.27,   ticket: 2271.14,  status: 'Não iniciada',   encCarrinho: '26/08/2026' },
+    "Extensivo Revalida 27.1":         { vendas: 8,    bookedTotal: 0,         ticket: 0,        status: 'Não iniciada',   encCarrinho: '23/03/2027', alerta: true },
   }
 
   const statusList = ['Todos', ...Array.from(new Set(Object.values(cursos).map(c => c.status)))]
@@ -143,7 +143,7 @@ export default function Home() {
         </div>
 
         <p style={{ marginTop: '1rem', fontSize: '11px', color: '#aaa', textAlign: 'right' }}>
-          * Somente deals com status "Negócio Faturado" no HubSpot • Data de encerramento de carrinho não disponível como propriedade no HubSpot
+          * Somente deals com status "Negócio Faturado" no HubSpot • Datas de encerramento de carrinho extraídas do Roadmap GTM 26/27
         </p>
       </div>
     </div>
