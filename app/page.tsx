@@ -15,7 +15,6 @@ const STATUS_COLORS: Record<string, string> = {
   'Finalizado':     '#e8f5e9',
   'Acompanhamento': '#e3f2fd',
   'Em execução':    '#fff8e1',
-  'Expansão':       '#f3e5f5',
   'Não iniciada':   '#f5f5f5',
 }
 
@@ -23,7 +22,6 @@ const STATUS_TEXT: Record<string, string> = {
   'Finalizado':     '#2e7d32',
   'Acompanhamento': '#1565c0',
   'Em execução':    '#e65100',
-  'Expansão':       '#6a1b9a',
   'Não iniciada':   '#757575',
 }
 
@@ -36,11 +34,15 @@ export default function Home() {
     "Intensivo TED 2026":              { vendas: 16,   bookedTotal: 28680.09,  ticket: 1792.51,  status: 'Acompanhamento', encCarrinho: '19/04/2026' },
     "Extensivo TED/TPI (1 e 2 anos)":  { vendas: 70,   bookedTotal: 323051.44, ticket: 4615.02,  status: 'Acompanhamento', encCarrinho: '29/01/2027' },
     "Extensivo TED/TPI (3 anos)":      { vendas: 15,   bookedTotal: 122499.76, ticket: 8166.65,  status: 'Acompanhamento', encCarrinho: '09/03/2027' },
-    "CR Revalida Presencial 25.2":     { vendas: 54,   bookedTotal: 29836.00,  ticket: 542.47,   status: 'Expansão',       encCarrinho: '07/05/2026' },
+    "CR Revalida Presencial 25.2":     { vendas: 54,   bookedTotal: 29836.00,  ticket: 542.47,   status: 'Finalizado',     encCarrinho: '07/05/2026' },
     "CR Revalida Online 25.2":         { vendas: 418,  bookedTotal: 0,         ticket: 0,        status: 'Em execução',    encCarrinho: '18/05/2026', alerta: true },
     "Intensivo Revalida 26.1":         { vendas: 1096, bookedTotal: 0,         ticket: 0,        status: 'Em execução',    encCarrinho: '07/06/2026', alerta: true },
     "Intensivo Revalida 26.2":         { vendas: 2,    bookedTotal: 4542.27,   ticket: 2271.14,  status: 'Não iniciada',   encCarrinho: '26/08/2026' },
     "Extensivo Revalida 27.1":         { vendas: 8,    bookedTotal: 0,         ticket: 0,        status: 'Não iniciada',   encCarrinho: '23/03/2027', alerta: true },
+    "Extensivo R+ CM 2026":            { vendas: 1009, bookedTotal: 8831287.05, ticket: 8752.51,  status: 'Em execução',    encCarrinho: 'N/D' },
+    "Extensivo R+ PED 2026":           { vendas: 261,  bookedTotal: 2076133.64, ticket: 7954.54,  status: 'Em execução',    encCarrinho: 'N/D' },
+    "Extensivo R+ GO 2026":            { vendas: 233,  bookedTotal: 1727381.90, ticket: 7413.66,  status: 'Em execução',    encCarrinho: 'N/D' },
+    "Extensivo R+ CIR 2026":           { vendas: 193,  bookedTotal: 1223281.32, ticket: 6338.25,  status: 'Em execução',    encCarrinho: 'N/D' },
     "Extensivo R+ CM - 2027":          { vendas: 0,    bookedTotal: 0,         ticket: 0,        status: 'Não iniciada',   encCarrinho: '31/03/2027' },
     "Extensivo R+ GO - 2027":          { vendas: 0,    bookedTotal: 0,         ticket: 0,        status: 'Não iniciada',   encCarrinho: '31/03/2027' },
     "Extensivo R+ PED - 2027":         { vendas: 0,    bookedTotal: 0,         ticket: 0,        status: 'Não iniciada',   encCarrinho: '31/03/2027' },
