@@ -12,17 +12,15 @@ type Curso = {
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  'Finalizado':     '#e8f5e9',
-  'Acompanhamento': '#e3f2fd',
-  'Em execução':    '#fff8e1',
-  'Não iniciada':   '#f5f5f5',
+  'Finalizado':   '#e8f5e9',
+  'Em execução':  '#fff8e1',
+  'Não iniciada': '#f5f5f5',
 }
 
 const STATUS_TEXT: Record<string, string> = {
-  'Finalizado':     '#2e7d32',
-  'Acompanhamento': '#1565c0',
-  'Em execução':    '#e65100',
-  'Não iniciada':   '#757575',
+  'Finalizado':   '#2e7d32',
+  'Em execução':  '#e65100',
+  'Não iniciada': '#757575',
 }
 
 const MESES_PT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
@@ -46,9 +44,9 @@ export default function Home() {
 
   const cursos: Record<string, Curso> = {
     "Intensivo TPI 2026":              { vendas: 11,   bookedTotal: 16490.16,    ticket: 1499.11,  status: 'Finalizado',     encCarrinho: '08/02/2026' },
-    "Intensivo TED 2026":              { vendas: 16,   bookedTotal: 28680.09,    ticket: 1792.51,  status: 'Acompanhamento', encCarrinho: '19/04/2026' },
-    "Extensivo TED/TPI (1 e 2 anos)":  { vendas: 70,   bookedTotal: 323051.44,   ticket: 4615.02,  status: 'Acompanhamento', encCarrinho: '29/01/2027' },
-    "Extensivo TED/TPI (3 anos)":      { vendas: 15,   bookedTotal: 122499.76,   ticket: 8166.65,  status: 'Acompanhamento', encCarrinho: '09/03/2027' },
+    "Intensivo TED 2026":              { vendas: 16,   bookedTotal: 28680.09,    ticket: 1792.51,  status: 'Em execução',    encCarrinho: '19/04/2026' },
+    "Extensivo TED/TPI (1 e 2 anos)":  { vendas: 70,   bookedTotal: 323051.44,   ticket: 4615.02,  status: 'Em execução',    encCarrinho: '29/01/2027' },
+    "Extensivo TED/TPI (3 anos)":      { vendas: 15,   bookedTotal: 122499.76,   ticket: 8166.65,  status: 'Em execução',    encCarrinho: '09/03/2027' },
     "CR Revalida Presencial 25.2":     { vendas: 54,   bookedTotal: 29836.00,    ticket: 542.47,   status: 'Finalizado',     encCarrinho: '07/05/2026' },
     "CR Revalida Online 25.2":         { vendas: 418,  bookedTotal: 0,           ticket: 0,        status: 'Em execução',    encCarrinho: '18/05/2026', alerta: true },
     "Intensivo Revalida 26.1":         { vendas: 1096, bookedTotal: 0,           ticket: 0,        status: 'Em execução',    encCarrinho: '07/06/2026', alerta: true },
@@ -113,7 +111,7 @@ export default function Home() {
             { label: 'Total de Vendas',    value: totalVendas.toLocaleString('pt-BR'), color: '#00205B' },
             { label: 'Booked Sales Total', value: `R$ ${fmt(totalBooked)}`,            color: '#0C447C' },
             { label: 'Ticket Médio Geral', value: `R$ ${fmt(ticketGeral)}`,            color: '#27500A' },
-            { label: 'Cursos Ativos',      value: filteredCursos.filter(c => ['Em execução','Acompanhamento'].includes(c.status)).length.toString(), color: '#6a1b9a' },
+            { label: 'Cursos Ativos',      value: filteredCursos.filter(c => c.status === 'Em execução').length.toString(), color: '#6a1b9a' },
           ].map(card => (
             <div key={card.label} style={{ backgroundColor: '#fff', borderRadius: '10px', padding: '1.25rem 1.5rem', boxShadow: '0 1px 4px rgba(0,0,0,0.07)' }}>
               <div style={{ fontSize: '11px', color: '#888', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{card.label}</div>
@@ -173,7 +171,11 @@ export default function Home() {
                     {dados.alerta && <span style={{ color: '#f57c00', marginRight: '6px' }}>⚠️</span>}
                     {nome}
                   </td>
-                  <td style={{ padding: '12px 14px', textAlign: 'center', fontSize: '13px', fontWeight: 600 }}>{dados.vendas.toLocaleString('pt-BR')}</td>
+                  <td style={{ padding: '12px 14px', textAlign: 'center', fontSize: '13px', fontWeight: 600 }}>
+                    {dados.vendas === 0 && nome !== 'Extensivo Revalida 27.1'
+                      ? <span style={{ backgroundColor: '#e8f4fd', color: '#0277bd', padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 600 }}>Foco em leads</span>
+                      : dados.vendas.toLocaleString('pt-BR')}
+                  </td>
                   <td style={{ padding: '12px 14px', textAlign: 'center', fontSize: '13px', color: dados.bookedTotal > 0 ? '#1a1a1a' : '#bbb' }}>
                     {dados.bookedTotal > 0 ? `R$ ${fmt(dados.bookedTotal)}` : '—'}
                   </td>
