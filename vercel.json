@@ -2,7 +2,10 @@
   "buildCommand": "next build",
   "outputDirectory": ".next",
   "devCommand": "next dev",
-  "env": {
-    "NODE_ENV": "production"
-  }
+  "crons": [
+    {
+      "path": "/api/revalidate",
+      "schedule": "0 7 * * *"
+    }
+  ]
 }
