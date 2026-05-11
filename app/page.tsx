@@ -25,31 +25,59 @@ const STATUS_TEXT: Record<string, string> = {
   'Não iniciada':   '#757575',
 }
 
+const MESES_PT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
+
+function parseEncMes(enc: string): string | null {
+  if (!enc || enc === 'N/D') return null
+  const parts = enc.split('/')
+  if (parts.length !== 3) return null
+  return `${parts[1]}/${parts[2]}`
+}
+
+function fmtMesLabel(mmyyyy: string): string {
+  const [mm, yyyy] = mmyyyy.split('/')
+  return `${MESES_PT[parseInt(mm) - 1]} ${yyyy}`
+}
+
 export default function Home() {
   const [search, setSearch] = useState('')
   const [statusFiltro, setStatusFiltro] = useState('Todos')
+  const [mesFiltro, setMesFiltro] = useState('Todos')
 
   const cursos: Record<string, Curso> = {
-    "Intensivo TPI 2026":              { vendas: 11,   bookedTotal: 16490.16,  ticket: 1499.11,  status: 'Finalizado',     encCarrinho: '08/02/2026' },
-    "Intensivo TED 2026":              { vendas: 16,   bookedTotal: 28680.09,  ticket: 1792.51,  status: 'Acompanhamento', encCarrinho: '19/04/2026' },
-    "Extensivo TED/TPI (1 e 2 anos)":  { vendas: 70,   bookedTotal: 323051.44, ticket: 4615.02,  status: 'Acompanhamento', encCarrinho: '29/01/2027' },
-    "Extensivo TED/TPI (3 anos)":      { vendas: 15,   bookedTotal: 122499.76, ticket: 8166.65,  status: 'Acompanhamento', encCarrinho: '09/03/2027' },
-    "CR Revalida Presencial 25.2":     { vendas: 54,   bookedTotal: 29836.00,  ticket: 542.47,   status: 'Finalizado',     encCarrinho: '07/05/2026' },
-    "CR Revalida Online 25.2":         { vendas: 418,  bookedTotal: 0,         ticket: 0,        status: 'Em execução',    encCarrinho: '18/05/2026', alerta: true },
-    "Intensivo Revalida 26.1":         { vendas: 1096, bookedTotal: 0,         ticket: 0,        status: 'Em execução',    encCarrinho: '07/06/2026', alerta: true },
-    "Intensivo Revalida 26.2":         { vendas: 2,    bookedTotal: 4542.27,   ticket: 2271.14,  status: 'Não iniciada',   encCarrinho: '26/08/2026' },
-    "Extensivo Revalida 27.1":         { vendas: 8,    bookedTotal: 0,         ticket: 0,        status: 'Não iniciada',   encCarrinho: '23/03/2027', alerta: true },
-    "Extensivo R+ CM 2026":            { vendas: 1009, bookedTotal: 8831287.05, ticket: 8752.51,  status: 'Em execução',    encCarrinho: 'N/D' },
-    "Extensivo R+ PED 2026":           { vendas: 261,  bookedTotal: 2076133.64, ticket: 7954.54,  status: 'Em execução',    encCarrinho: 'N/D' },
-    "Extensivo R+ GO 2026":            { vendas: 233,  bookedTotal: 1727381.90, ticket: 7413.66,  status: 'Em execução',    encCarrinho: 'N/D' },
-    "Extensivo R+ CIR 2026":           { vendas: 193,  bookedTotal: 1223281.32, ticket: 6338.25,  status: 'Em execução',    encCarrinho: 'N/D' },
-    "Extensivo R+ CM - 2027":          { vendas: 0,    bookedTotal: 0,         ticket: 0,        status: 'Não iniciada',   encCarrinho: '31/03/2027' },
-    "Extensivo R+ GO - 2027":          { vendas: 0,    bookedTotal: 0,         ticket: 0,        status: 'Não iniciada',   encCarrinho: '31/03/2027' },
-    "Extensivo R+ PED - 2027":         { vendas: 0,    bookedTotal: 0,         ticket: 0,        status: 'Não iniciada',   encCarrinho: '31/03/2027' },
-    "Extensivo R+ CIR - 2027":         { vendas: 0,    bookedTotal: 0,         ticket: 0,        status: 'Não iniciada',   encCarrinho: '31/03/2027' },
-    "Extensivo R+ Endoscopia":         { vendas: 0,    bookedTotal: 0,         ticket: 0,        status: 'Não iniciada',   encCarrinho: '01/03/2027' },
-    "Extensivo R+ Mastologia":         { vendas: 0,    bookedTotal: 0,         ticket: 0,        status: 'Não iniciada',   encCarrinho: '01/03/2027' },
+    "Intensivo TPI 2026":              { vendas: 11,   bookedTotal: 16490.16,    ticket: 1499.11,  status: 'Finalizado',     encCarrinho: '08/02/2026' },
+    "Intensivo TED 2026":              { vendas: 16,   bookedTotal: 28680.09,    ticket: 1792.51,  status: 'Acompanhamento', encCarrinho: '19/04/2026' },
+    "Extensivo TED/TPI (1 e 2 anos)":  { vendas: 70,   bookedTotal: 323051.44,   ticket: 4615.02,  status: 'Acompanhamento', encCarrinho: '29/01/2027' },
+    "Extensivo TED/TPI (3 anos)":      { vendas: 15,   bookedTotal: 122499.76,   ticket: 8166.65,  status: 'Acompanhamento', encCarrinho: '09/03/2027' },
+    "CR Revalida Presencial 25.2":     { vendas: 54,   bookedTotal: 29836.00,    ticket: 542.47,   status: 'Finalizado',     encCarrinho: '07/05/2026' },
+    "CR Revalida Online 25.2":         { vendas: 418,  bookedTotal: 0,           ticket: 0,        status: 'Em execução',    encCarrinho: '18/05/2026', alerta: true },
+    "Intensivo Revalida 26.1":         { vendas: 1096, bookedTotal: 0,           ticket: 0,        status: 'Em execução',    encCarrinho: '07/06/2026', alerta: true },
+    "Intensivo Revalida 26.2":         { vendas: 2,    bookedTotal: 4542.27,     ticket: 2271.14,  status: 'Não iniciada',   encCarrinho: '26/08/2026' },
+    "Extensivo Revalida 27.1":         { vendas: 8,    bookedTotal: 0,           ticket: 0,        status: 'Não iniciada',   encCarrinho: '23/03/2027', alerta: true },
+    "Extensivo R+ CM 2026":            { vendas: 1009, bookedTotal: 8831287.05,  ticket: 8752.51,  status: 'Em execução',    encCarrinho: '03/08/2026' },
+    "Extensivo R+ PED 2026":           { vendas: 261,  bookedTotal: 2076133.64,  ticket: 7954.54,  status: 'Em execução',    encCarrinho: '03/08/2026' },
+    "Extensivo R+ GO 2026":            { vendas: 233,  bookedTotal: 1727381.90,  ticket: 7413.66,  status: 'Em execução',    encCarrinho: '03/08/2026' },
+    "Extensivo R+ CIR 2026":           { vendas: 193,  bookedTotal: 1223281.32,  ticket: 6338.25,  status: 'Em execução',    encCarrinho: '03/08/2026' },
+    "Extensivo R+ CM - 2027":          { vendas: 0,    bookedTotal: 0,           ticket: 0,        status: 'Não iniciada',   encCarrinho: '31/03/2027' },
+    "Extensivo R+ GO - 2027":          { vendas: 0,    bookedTotal: 0,           ticket: 0,        status: 'Não iniciada',   encCarrinho: '31/03/2027' },
+    "Extensivo R+ PED - 2027":         { vendas: 0,    bookedTotal: 0,           ticket: 0,        status: 'Não iniciada',   encCarrinho: '31/03/2027' },
+    "Extensivo R+ CIR - 2027":         { vendas: 0,    bookedTotal: 0,           ticket: 0,        status: 'Não iniciada',   encCarrinho: '31/03/2027' },
+    "Extensivo R+ Endoscopia":         { vendas: 0,    bookedTotal: 0,           ticket: 0,        status: 'Não iniciada',   encCarrinho: '01/03/2027' },
+    "Extensivo R+ Mastologia":         { vendas: 0,    bookedTotal: 0,           ticket: 0,        status: 'Não iniciada',   encCarrinho: '01/03/2027' },
   }
+
+  const mesesDisponiveis = [
+    'Todos',
+    ...Array.from(new Set(
+      Object.values(cursos)
+        .map(c => parseEncMes(c.encCarrinho))
+        .filter((m): m is string => m !== null)
+    )).sort((a, b) => {
+      const [am, ay] = a.split('/').map(Number)
+      const [bm, by] = b.split('/').map(Number)
+      return ay !== by ? ay - by : am - bm
+    }),
+  ]
 
   const statusList = ['Todos', ...Array.from(new Set(Object.values(cursos).map(c => c.status)))]
 
@@ -57,13 +85,16 @@ export default function Home() {
     .filter(([nome, dados]) => {
       const matchSearch = nome.toLowerCase().includes(search.toLowerCase())
       const matchStatus = statusFiltro === 'Todos' || dados.status === statusFiltro
-      return matchSearch && matchStatus
+      const matchMes = mesFiltro === 'Todos' || parseEncMes(dados.encCarrinho) === mesFiltro
+      return matchSearch && matchStatus && matchMes
     })
     .sort((a, b) => b[1].bookedTotal - a[1].bookedTotal)
 
-  const totalVendas    = Object.values(cursos).reduce((s, c) => s + c.vendas, 0)
-  const totalBooked    = Object.values(cursos).reduce((s, c) => s + c.bookedTotal, 0)
-  const ticketGeral    = totalVendas > 0 ? totalBooked / Object.values(cursos).filter(c => c.bookedTotal > 0).reduce((s, c) => s + c.vendas, 0) : 0
+  const filteredCursos = filtered.map(([, dados]) => dados)
+  const totalVendas  = filteredCursos.reduce((s, c) => s + c.vendas, 0)
+  const totalBooked  = filteredCursos.reduce((s, c) => s + c.bookedTotal, 0)
+  const vendasComVal = filteredCursos.filter(c => c.bookedTotal > 0).reduce((s, c) => s + c.vendas, 0)
+  const ticketGeral  = vendasComVal > 0 ? totalBooked / vendasComVal : 0
 
   const fmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 
@@ -82,7 +113,7 @@ export default function Home() {
             { label: 'Total de Vendas',    value: totalVendas.toLocaleString('pt-BR'), color: '#00205B' },
             { label: 'Booked Sales Total', value: `R$ ${fmt(totalBooked)}`,            color: '#0C447C' },
             { label: 'Ticket Médio Geral', value: `R$ ${fmt(ticketGeral)}`,            color: '#27500A' },
-            { label: 'Cursos Ativos',      value: Object.values(cursos).filter(c => ['Em execução','Acompanhamento','Expansão'].includes(c.status)).length.toString(), color: '#6a1b9a' },
+            { label: 'Cursos Ativos',      value: filteredCursos.filter(c => ['Em execução','Acompanhamento'].includes(c.status)).length.toString(), color: '#6a1b9a' },
           ].map(card => (
             <div key={card.label} style={{ backgroundColor: '#fff', borderRadius: '10px', padding: '1.25rem 1.5rem', boxShadow: '0 1px 4px rgba(0,0,0,0.07)' }}>
               <div style={{ fontSize: '11px', color: '#888', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{card.label}</div>
@@ -97,7 +128,7 @@ export default function Home() {
         </div>
 
         {/* Filtros */}
-        <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
           <input
             type="text"
             placeholder="Buscar curso..."
@@ -111,6 +142,17 @@ export default function Home() {
             style={{ padding: '0.6rem 0.9rem', fontSize: '14px', border: '1px solid #ddd', borderRadius: '6px', background: '#fff' }}
           >
             {statusList.map(s => <option key={s}>{s}</option>)}
+          </select>
+          <select
+            value={mesFiltro}
+            onChange={e => setMesFiltro(e.target.value)}
+            style={{ padding: '0.6rem 0.9rem', fontSize: '14px', border: '1px solid #ddd', borderRadius: '6px', background: '#fff' }}
+          >
+            {mesesDisponiveis.map(m => (
+              <option key={m} value={m}>
+                {m === 'Todos' ? 'Todos os meses' : fmtMesLabel(m)}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -146,6 +188,11 @@ export default function Home() {
                   <td style={{ padding: '12px 14px', textAlign: 'center', fontSize: '12px', color: '#999' }}>{dados.encCarrinho}</td>
                 </tr>
               ))}
+              {filtered.length === 0 && (
+                <tr>
+                  <td colSpan={6} style={{ padding: '2rem', textAlign: 'center', fontSize: '13px', color: '#aaa' }}>Nenhum curso encontrado para os filtros selecionados.</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
