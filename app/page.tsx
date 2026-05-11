@@ -41,6 +41,12 @@ export default function Home() {
     "Intensivo Revalida 26.1":         { vendas: 1096, bookedTotal: 0,         ticket: 0,        status: 'Em execução',    encCarrinho: '07/06/2026', alerta: true },
     "Intensivo Revalida 26.2":         { vendas: 2,    bookedTotal: 4542.27,   ticket: 2271.14,  status: 'Não iniciada',   encCarrinho: '26/08/2026' },
     "Extensivo Revalida 27.1":         { vendas: 8,    bookedTotal: 0,         ticket: 0,        status: 'Não iniciada',   encCarrinho: '23/03/2027', alerta: true },
+    "Extensivo R+ CM - 2027":          { vendas: 0,    bookedTotal: 0,         ticket: 0,        status: 'Não iniciada',   encCarrinho: '31/03/2027' },
+    "Extensivo R+ GO - 2027":          { vendas: 0,    bookedTotal: 0,         ticket: 0,        status: 'Não iniciada',   encCarrinho: '31/03/2027' },
+    "Extensivo R+ PED - 2027":         { vendas: 0,    bookedTotal: 0,         ticket: 0,        status: 'Não iniciada',   encCarrinho: '31/03/2027' },
+    "Extensivo R+ CIR - 2027":         { vendas: 0,    bookedTotal: 0,         ticket: 0,        status: 'Não iniciada',   encCarrinho: '31/03/2027' },
+    "Extensivo R+ Endoscopia":         { vendas: 0,    bookedTotal: 0,         ticket: 0,        status: 'Não iniciada',   encCarrinho: '01/03/2027' },
+    "Extensivo R+ Mastologia":         { vendas: 0,    bookedTotal: 0,         ticket: 0,        status: 'Não iniciada',   encCarrinho: '01/03/2027' },
   }
 
   const statusList = ['Todos', ...Array.from(new Set(Object.values(cursos).map(c => c.status)))]
