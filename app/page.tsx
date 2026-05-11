@@ -43,7 +43,6 @@ export default function Home() {
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
-      {/* Header */}
       <header style={{ backgroundColor: '#00205B', color: '#fff', padding: '2rem' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <h1 style={{ margin: 0, fontSize: '28px', fontWeight: 'bold' }}>Medway Dashboard</h1>
@@ -51,7 +50,6 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Metrics */}
       <div style={{ maxWidth: '1200px', margin: '2rem auto', padding: '0 1rem' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
           <div style={{ backgroundColor: '#fff', borderRadius: '8px', padding: '1.5rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
@@ -72,7 +70,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Search */}
         <div style={{ marginBottom: '1.5rem' }}>
           <input
             type="text"
@@ -84,55 +81,3 @@ export default function Home() {
               padding: '0.75rem',
               fontSize: '14px',
               border: '1px solid #ddd',
-              borderRadius: '6px',
-              boxSizing: 'border-box'
-            }}
-          />
-        </div>
-
-        {/* Table */}
-        <div style={{ backgroundColor: '#fff', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr style={{ backgroundColor: '#f9f9f9', borderBottom: '1px solid #eee' }}>
-                <th style={{ padding: '12px 16px', textAlign: 'left', fontWeight: '600', fontSize: '12px' }}>Produto</th>
-                <th style={{ padding: '12px 16px', textAlign: 'center', fontWeight: '600', fontSize: '12px' }}>Vendas</th>
-                <th style={{ padding: '12px 16px', textAlign: 'center', fontWeight: '600', fontSize: '12px' }}>Booked</th>
-                <th style={{ padding: '12px 16px', textAlign: 'right', fontWeight: '600', fontSize: '12px' }}>Total</th>
-                <th style={{ padding: '12px 16px', textAlign: 'right', fontWeight: '600', fontSize: '12px' }}>Ticket</th>
-                <th style={{ padding: '12px 16px', textAlign: 'center', fontWeight: '600', fontSize: '12px' }}>Taxa</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map(([produto, dados]) => {
-                const taxa = dados.vendas > 0 ? Math.round((dados.booked / dados.vendas) * 100) : 0
-                return (
-                  <tr key={produto} style={{ borderBottom: '1px solid #eee', fontSize: '12px' }}>
-                    <td style={{ padding: '12px 16px', fontWeight: '500' }}>{produto}</td>
-                    <td style={{ padding: '12px 16px', textAlign: 'center' }}>{dados.vendas}</td>
-                    <td style={{ padding: '12px 16px', textAlign: 'center', fontWeight: '500' }}>{dados.booked}</td>
-                    <td style={{ padding: '12px 16px', textAlign: 'right', fontWeight: '500' }}>{formatCurrency(dados.total)}</td>
-                    <td style={{ padding: '12px 16px', textAlign: 'right' }}>{formatCurrencyDetailed(dados.ticket)}</td>
-                    <td style={{ padding: '12px 16px', textAlign: 'center', backgroundColor: taxa > 0 ? '#f0fdf4' : '#fef3c7', fontWeight: '500' }}>{taxa}%</td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        </div>
-
-        {filtered.length === 0 && (
-          <div style={{ textAlign: 'center', padding: '2rem', color: '#666' }}>
-            Nenhum produto encontrado
-          </div>
-        )}
-
-        {/* Footer */}
-        <div style={{ marginTop: '2rem', padding: '1.5rem', backgroundColor: '#fff', borderRadius: '8px', fontSize: '12px', color: '#666', textAlign: 'center' }}>
-          <p>Dashboard Medway © 2026 | Dados em tempo real do HubSpot</p>
-          <p>Powered by Vercel</p>
-        </div>
-      </div>
-    </div>
-  )
-}
