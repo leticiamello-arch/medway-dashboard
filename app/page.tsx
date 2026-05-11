@@ -44,6 +44,9 @@ export default function Home() {
     "Extensivo R+ CIR 2026":          { vendas: 193,  bookedTotal: 1223281.32, ticket: 6338.25, status: 'Em execução',  encCarrinho: '03/08/2026', secao: 'receita' },
     "CR Revalida Online 25.2":        { vendas: 418,  bookedTotal: 0,          ticket: 0,       status: 'Em execução',  encCarrinho: '18/05/2026', secao: 'leads',   alerta: true },
     "Intensivo Revalida 26.1":        { vendas: 1096, bookedTotal: 0,          ticket: 0,       status: 'Em execução',  encCarrinho: '07/06/2026', secao: 'leads',   alerta: true },
+    "Reta Final TEP":                 { vendas: 435,  bookedTotal: 0,          ticket: 0,       status: 'Em execução',  encCarrinho: '01/06/2026', secao: 'leads' },
+    "Reta Final TEGO/TPI":            { vendas: 318,  bookedTotal: 0,          ticket: 0,       status: 'Em execução',  encCarrinho: '01/07/2026', secao: 'leads' },
+    "Reta Final TECM":                { vendas: 93,   bookedTotal: 0,          ticket: 0,       status: 'Em execução',  encCarrinho: '01/10/2026', secao: 'leads' },
   }
 
   const statusList = ['Todos', ...Array.from(new Set(Object.values(cursos).map(c => c.status)))]
